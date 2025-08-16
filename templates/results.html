@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2>Results for {{ record.location }} ({{ record.date_range }})</h2>
+
+  {% set current = data.get('current', {}) %}
+  {% set forecast = data.get('forecast', {}) %}
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Current</h3>
+      {% if current and current.get('weather') %}
+        <p><strong>Temp:</strong> {{ current.main.temp }} °C</p>
+        <p><strong>Feels like:</strong> {{ current.main.feels_like }} °C</p>
+        <p><strong>Condition:</strong> {{ current.weather[0].description }}</p>
+        <p><strong>Humidity:</strong> {{ current.main.humidity }}%</p>
+        <p><strong>Wind:</strong> {{ current.wind.speed }} m/s</p>
+      {% else %}
+        <p>No current weather available.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>Map</h3>
+      {% if maps_key %}
+        {% if current and current.get('coord') %}
+          {% set lat = current.coord.lat %}
+          {% set lon = current.coord.lon %}
+          <iframe
+            width="100%"
+            height="300"
+            style="border:0"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps/embed/v1/view?key={{ maps_key }}&center={{ lat }},{{ lon }}&zoom=9&maptype=roadmap">
+          </iframe>
+        {% else %}
+          <p>Coordinates not available.</p>
+        {% endif %}
+      {% else %}
+        <p>Google Maps API key not set. Skipping map embed.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>5-Day Forecast (every 3 hours)</h3>
+    {% if forecast and forecast.get('list') %}
+      <div class="forecast-grid">
+        {% for item in forecast.list[:40] %}
+          <div class="forecast-item">
+            <div class="dt">{{ item.dt_txt }}</div>
+            <div class="temp">{{ item.main.temp }} °C</div>
+            <div class="desc">{{ item.weather[0].description }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No forecast data.</p>
+    {% endif %}
+  </section>
+
+  <div class="actions">
+    <a href="{{ url_for('records') }}" class="btn">Back to Records</a>
+  </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h1>Weather: Current + 5-Day Forecast</h1>
+  <form method="post" class="card">
+    <label>
+      Location (city):
+      <input type="text" name="location" placeholder="e.g., London" required />
+    </label>
+    <label>
+      Date range (free text):
+      <input type="text" name="date_range" placeholder="e.g., Today to Friday" required />
+    </label>
+    <button type="submit">Get weather</button>
+  </form>
+{% endblock %}

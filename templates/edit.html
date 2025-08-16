@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h1>Edit Record</h1>
+  <form method="post" class="card">
+    <label>
+      Location (city):
+      <input type="text" name="location" value="{{ record.location }}" required />
+    </label>
+    <label>
+      Date range:
+      <input type="text" name="date_range" value="{{ record.date_range }}" required />
+    </label>
+    <button type="submit">Save</button>
+    <a href="{{ url_for('records') }}" class="btn secondary">Cancel</a>
+  </form>
+{% endblock %}
